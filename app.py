@@ -30,7 +30,7 @@ st.sidebar.title("Menu")
 menu = st.sidebar.radio("Select Action", ["Purchase Entry", "Sale Entry", "Payment/Receipt Entry"])
 
 # Google Sheets Setup
-sheet_json = "amazing-zephyr-446217-g0-b3478d3380a8.json"  # Replace with your JSON key file path
+sheet_json = st.secrets["google_sheets_api_key"]  # Replace with your JSON key file path
 sheet_id = "1PjGYnPurJgk89EaGRQaMxHbYaI5bpn4GbF3F4NnaCiI"  # Replace with your Google Sheets ID
 worksheet_name = "Daybook"  # Replace with your specific worksheet name
 sheet = authenticate_gsheets(sheet_json, sheet_id, worksheet_name)
