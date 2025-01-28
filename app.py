@@ -4,12 +4,12 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
 # Google Sheets Authentication
-def authenticate_gsheets(json_file, sheet_id, worksheet_name):
+def authenticate_gsheets(json_dict, sheet_id, worksheet_name):
     """
     Authenticate and return a specific worksheet in a Google Sheets document using its ID.
     """
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name(json_file, scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(json_dict, scope)
     client = gspread.authorize(creds)
     workbook = client.open_by_key(sheet_id)
     worksheet = workbook.worksheet(worksheet_name)
@@ -23,33 +23,33 @@ def add_to_sheet(sheet, row_data):
     last_row = len(sheet.get_all_values()) + 1
     sheet.append_row(row_data, value_input_option="USER_ENTERED")
 
-
 # Streamlit App
 st.title("")
 st.sidebar.title("Menu")
 menu = st.sidebar.radio("Select Action", ["Purchase Entry", "Sale Entry", "Payment/Receipt Entry"])
 
 # Google Sheets Setup
-sheet_json = st.secrets["google_service_account"]  # Replace with your JSON key file path
+sheet_json = st.secrets["google_service_account"]  # Get the service account credentials from Streamlit secrets
 sheet_id = "1PjGYnPurJgk89EaGRQaMxHbYaI5bpn4GbF3F4NnaCiI"  # Replace with your Google Sheets ID
 worksheet_name = "Daybook"  # Replace with your specific worksheet name
 sheet = authenticate_gsheets(sheet_json, sheet_id, worksheet_name)
 
 # Predefined Party Names (for each section)
 purchase_parties = ["Devansh", "Raj", "Bhr", "Samyak", "Aci"]
-sale_parties = ["Radha", "Pravesh", "Rc", "Mci", "Jawaharji", "Munishji","Sanjay","Narayan"]
-additional_payment_parties = ["Papa", "Icici", "Fact Exp", "Home Exp","Gst","Ranjeet","Bhure","Raja","Shivam","Rajender"]
+sale_parties = ["Radha", "Pravesh", "Rc", "Mci", "Jawaharji", "Munishji", "Sanjay", "Narayan"]
+additional_payment_parties = ["Papa", "Icici", "Fact Exp", "Home Exp", "Gst", "Ranjeet", "Bhure", "Raja", "Shivam", "Rajender"]
 
 # Predefined Items
 purchase_items = [
     "Resin", "C1000", "C001", "Cpw", "DOP", "Dbp", "Tbls", "Dblp", 
-    "Ls", "St", "Op304", "Op318", "Lqd", "Eva", "GST","Tin"
+    "Ls", "St", "Op304", "Op318", "Lqd", "Eva", "GST", "Tin"
 ]
 sale_items = [
     "Ap25", "Ap50", "Ap5", "1800n", "Rbc", "Ap84", "L10", "L10dbp", 
     "L20", "101n", "L2", "12dbp", "212n", "220n", "C3", "20n", "J20", 
-    "5dop", "2n", "6n", "P94", "P90", "P02", "P23", "Dt94", "GST","18n","25s"
+    "5dop", "2n", "6n", "P94", "P90", "P02", "P23", "Dt94", "GST", "18n", "25s"
 ]
+
 if menu == "Purchase Entry":
     st.header("Purchase Entry")
     date = st.date_input("Date", datetime.now())
@@ -72,11 +72,11 @@ if menu == "Purchase Entry":
 
         if gst_applied:
             gst_percent = st.number_input(f"GST Percent for Item {i+1}", min_value=0.0, step=0.1, key=f"gst_percent_{i}")
-            adjusted_rate += round((rate * gst_percent / 100),2)
+            adjusted_rate += round((rate * gst_percent / 100), 2)
 
         if tcs_applied:
             tcs_percent = st.number_input(f"TCS Percent for Item {i+1}", min_value=0.0, step=0.1, key=f"tcs_percent_{i}")
-            adjusted_rate += round((adjusted_rate * tcs_percent / 100),2)
+            adjusted_rate += round((adjusted_rate * tcs_percent / 100), 2)
 
         amount = quantity * adjusted_rate
         items.append((item_type, quantity, rate, adjusted_rate, amount))
@@ -119,11 +119,11 @@ elif menu == "Sale Entry":
 
         if gst_applied:
             gst_percent = st.number_input(f"GST Percent for Item {i+1}", min_value=0.0, step=0.1, key=f"gst_percent_{i}")
-            adjusted_rate += round((rate * gst_percent / 100),2)
+            adjusted_rate += round((rate * gst_percent / 100), 2)
 
         if tcs_applied:
             tcs_percent = st.number_input(f"TCS Percent for Item {i+1}", min_value=0.0, step=0.1, key=f"tcs_percent_{i}")
-            adjusted_rate += round((adjusted_rate * tcs_percent / 100),2)
+            adjusted_rate += round((adjusted_rate * tcs_percent / 100), 2)
 
         amount = quantity * adjusted_rate
         items.append((item_type, quantity, rate, adjusted_rate, amount))
