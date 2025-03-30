@@ -36,7 +36,7 @@ sheet = authenticate_gsheets(sheet_json, sheet_id, worksheet_name)
 
 # Predefined Party Names (for each section)
 purchase_parties = ["Devansh", "Raj", "Bhr", "Samyak", "Aci"]
-sale_parties = ["Radha", "Pravesh", "Rc", "Mci", "Jawaharji", "Munishji", "Sanjay", "Narayan","Drum"]
+sale_parties = ["Radha", "Pravesh", "Rc", "Mci", "Jawaharji", "Munishji", "Sanjay", "Narayan","Drum","KI"]
 additional_payment_parties = ["Papa", "Icici", "Fact Exp", "Home Exp", "Gst", "Ranjeet", "Bhure", "Raja", "Shivam", "Rajender"]
 
 # Predefined Items
